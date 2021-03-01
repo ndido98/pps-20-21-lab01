@@ -88,8 +88,9 @@ public class CircularListTest {
         list.add(0);
         assertEquals(0, list.previous().get());
         list.add(1);
-        assertEquals(1, list.previous().get());
+        assertEquals(0, list.previous().get());
         list.add(2);
+        assertEquals(1, list.previous().get());
         assertEquals(0, list.previous().get());
         assertEquals(2, list.previous().get());
     }
