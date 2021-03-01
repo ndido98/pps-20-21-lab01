@@ -1,22 +1,30 @@
 package lab01.tdd;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class CircularListImpl implements CircularList {
 
+    private final List<Integer> list;
+
+    public CircularListImpl() {
+        list = new ArrayList<>();
+    }
+
     @Override
     public void add(int element) {
-
+        list.add(element);
     }
 
     @Override
     public int size() {
-        return 0;
+        return list.size();
     }
 
     @Override
     public boolean isEmpty() {
-        return true;
+        return list.size() == 0;
     }
 
     @Override

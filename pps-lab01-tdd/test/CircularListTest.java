@@ -21,4 +21,11 @@ public class CircularListTest {
         assertTrue(list.isEmpty());
         assertEquals(0, list.size());
     }
+
+    @Test
+    void testAddIncreasesSize() {
+        list.add(1);
+        assertFalse(list.isEmpty());
+        assertEquals(1, list.size());
+    }
 }
