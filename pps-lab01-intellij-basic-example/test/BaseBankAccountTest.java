@@ -1,6 +1,5 @@
 import lab01.example.model.AccountHolder;
 import lab01.example.model.BankAccount;
-import lab01.example.model.SimpleBankAccount;
 
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -8,10 +7,10 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * The test suite for testing the BaseBankAccount implementation
  */
-abstract class BaseBankAccountTest {
+abstract class BaseBankAccountTest<B extends BankAccount> {
 
-    private AccountHolder accountHolder;
-    private BankAccount bankAccount;
+    protected AccountHolder accountHolder;
+    protected B bankAccount;
 
     @BeforeEach
     void beforeEach() {
@@ -51,5 +50,5 @@ abstract class BaseBankAccountTest {
         assertEquals(100, bankAccount.getBalance());
     }
 
-    abstract BankAccount createBankAccount(AccountHolder holder, double initialBalance);
+    abstract B createBankAccount(AccountHolder holder, double initialBalance);
 }
