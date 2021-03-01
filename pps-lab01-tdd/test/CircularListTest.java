@@ -1,6 +1,8 @@
 import lab01.tdd.CircularList;
 import lab01.tdd.CircularListImpl;
 
+import lab01.tdd.SelectStrategyFactory;
+import lab01.tdd.SelectStrategyFactoryImpl;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -20,10 +22,12 @@ public class CircularListTest {
     private static final int LIST_START = 0;
     private static final int LIST_END = 3;
     private CircularList list;
+    private SelectStrategyFactory selectStrategyFactory;
 
     @BeforeEach
     void createCircularList() {
         list = new CircularListImpl();
+        selectStrategyFactory = new SelectStrategyFactoryImpl();
     }
 
     @Test
@@ -58,8 +62,9 @@ public class CircularListTest {
         list.add(0);
         assertEquals(0, list.next().get());
         list.add(1);
-        assertEquals(1, list.next().get());
+        assertEquals(0, list.next().get());
         list.add(2);
+        assertEquals(1, list.next().get());
         assertEquals(2, list.next().get());
     }
 
@@ -101,10 +106,28 @@ public class CircularListTest {
     void testNextWithStrategy() {
         populateList();
         List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
-                .mapToObj(i -> i % LIST_END)
+                .map(i -> i % LIST_END)
                 .filter(i -> i % 2 == 0)
+                .mapToObj(i -> i)
                 .collect(Collectors.toList());
-        testIteratorOnList(expected,() -> list.next(i -> i % 2 == 0));
+        testIteratorOnList(expected, () -> list.next(i -> i % 2 == 0));
+    }
+
+    @Test
+    void testNextWithStrategyNotFound() {
+        populateList();
+        assertFalse(list.next(i -> false).isPresent());
+    }
+
+    @Test
+    void testNextWithEvenStrategyFactory() {
+        populateList();
+        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+                .map(i -> i % LIST_END)
+                .filter(i -> selectStrategyFactory.evenStrategy().apply(i))
+                .mapToObj(i -> i)
+                .collect(Collectors.toList());
+        testIteratorOnList(expected, () -> list.next(selectStrategyFactory.evenStrategy()));
     }
 
     private void testIteratorOnList(List<Integer> expected, Supplier<Optional<Integer>> listGetter) {
