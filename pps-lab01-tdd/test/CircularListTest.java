@@ -3,7 +3,10 @@ import lab01.tdd.CircularListImpl;
 
 import org.junit.jupiter.api.*;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,12 +47,32 @@ public class CircularListTest {
     @Test
     void testNext() {
         populateList();
-        for (int r = 0; r < REPETITIONS; r++) {
-            for (int i = LIST_START; i < LIST_END; i++) {
-                Optional<Integer> next = list.next();
-                assertTrue(next.isPresent());
-                assertEquals(i, next.get());
-            }
+        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+                .mapToObj(i -> i % LIST_END)
+                .collect(Collectors.toList());
+        testIteratorOnList(expected, () -> list.next());
+    }
+
+    @Test
+    void testPreviousOnEmptyList() {
+        assertFalse(list.previous().isPresent());
+    }
+
+    @Test
+    void testPrevious() {
+        populateList();
+        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+                .map(i -> i % LIST_END)
+                .mapToObj(i -> (-i + LIST_END) % LIST_END)
+                .collect(Collectors.toList());
+        testIteratorOnList(expected,() -> list.previous());
+    }
+
+    private void testIteratorOnList(List<Integer> expected, Supplier<Optional<Integer>> listGetter) {
+        for (int i : expected) {
+            Optional<Integer> elem = listGetter.get();
+            assertTrue(elem.isPresent());
+            assertEquals(i, elem.get());
         }
     }
 
