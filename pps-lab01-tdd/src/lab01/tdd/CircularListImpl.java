@@ -32,7 +32,8 @@ public class CircularListImpl implements CircularList {
     @Override
     public Optional<Integer> next() {
         if (!isEmpty()) {
-            int elem = list.get(currentIndex % size());
+            currentIndex = currentIndex % size();
+            int elem = list.get(currentIndex);
             currentIndex++;
             return Optional.of(elem);
         } else {
@@ -43,8 +44,9 @@ public class CircularListImpl implements CircularList {
     @Override
     public Optional<Integer> previous() {
         if (!isEmpty()) {
+            currentIndex = (currentIndex + size()) % size();
             int elem = list.get(currentIndex);
-            currentIndex = (currentIndex - 1 + size()) % size();
+            currentIndex--;
             return Optional.of(elem);
         } else {
             return Optional.empty();
