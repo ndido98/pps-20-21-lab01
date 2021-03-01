@@ -68,6 +68,14 @@ public class CircularListTest {
         testIteratorOnList(expected,() -> list.previous());
     }
 
+    @Test
+    void testReset() {
+        populateList();
+        assertEquals(LIST_START, list.next().get());
+        list.reset();
+        assertEquals(LIST_START, list.next().get());
+    }
+
     private void testIteratorOnList(List<Integer> expected, Supplier<Optional<Integer>> listGetter) {
         for (int i : expected) {
             Optional<Integer> elem = listGetter.get();

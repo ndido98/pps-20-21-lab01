@@ -53,7 +53,7 @@ public class CircularListImpl implements CircularList {
 
     @Override
     public void reset() {
-
+        currentIndex = 0;
     }
 
     @Override
