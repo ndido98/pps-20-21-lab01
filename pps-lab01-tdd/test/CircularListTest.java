@@ -97,6 +97,16 @@ public class CircularListTest {
         assertEquals(LIST_START, list.next().get());
     }
 
+    @Test
+    void testNextWithStrategy() {
+        populateList();
+        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+                .mapToObj(i -> i % LIST_END)
+                .filter(i -> i % 2 == 0)
+                .collect(Collectors.toList());
+        testIteratorOnList(expected,() -> list.next(i -> i % 2 == 0));
+    }
+
     private void testIteratorOnList(List<Integer> expected, Supplier<Optional<Integer>> listGetter) {
         for (int i : expected) {
             Optional<Integer> elem = listGetter.get();

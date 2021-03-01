@@ -31,14 +31,7 @@ public class CircularListImpl implements CircularList {
 
     @Override
     public Optional<Integer> next() {
-        if (!isEmpty()) {
-            currentIndex = currentIndex % size();
-            int elem = list.get(currentIndex);
-            currentIndex++;
-            return Optional.of(elem);
-        } else {
-            return Optional.empty();
-        }
+        return next(i -> true);
     }
 
     @Override
@@ -59,7 +52,16 @@ public class CircularListImpl implements CircularList {
     }
 
     @Override
-    public Optional<Integer> next(SelectStrategy strategy) {
-        return Optional.empty();
+    public Optional<Integer> next(final SelectStrategy strategy) {
+        if (isEmpty()) {
+            return Optional.empty();
+        }
+        int elem = 0;
+        do {
+            currentIndex = currentIndex % size();
+            elem = list.get(currentIndex);
+            currentIndex++;
+        } while (!strategy.apply(elem));
+        return Optional.of(elem);
     }
 }
