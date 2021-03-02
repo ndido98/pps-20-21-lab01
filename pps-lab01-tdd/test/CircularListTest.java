@@ -2,10 +2,8 @@ import lab01.tdd.*;
 
 import org.junit.jupiter.api.*;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
