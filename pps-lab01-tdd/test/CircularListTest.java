@@ -52,8 +52,8 @@ public class CircularListTest {
     @Test
     void testNext() {
         populateList();
-        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
-                .mapToObj(i -> i % LIST_END);
+        var expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+                .map(i -> i % LIST_END);
         testIteratorOnList(expected, () -> list.next());
     }
 
@@ -76,9 +76,9 @@ public class CircularListTest {
     @Test
     void testPrevious() {
         populateList();
-        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+        var expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
-                .mapToObj(i -> (-i + LIST_END) % LIST_END);
+                .map(i -> (-i + LIST_END) % LIST_END);
         testIteratorOnList(expected, () -> list.previous());
     }
 
@@ -114,10 +114,9 @@ public class CircularListTest {
     @Test
     void testNextWithStrategy() {
         populateList();
-        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+        var expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
-                .filter(i -> i % 2 == 0)
-                .mapToObj(i -> i);
+                .filter(i -> i % 2 == 0);
         testIteratorOnList(expected, () -> list.next(i -> i % 2 == 0));
     }
 
@@ -130,11 +129,14 @@ public class CircularListTest {
     @Test
     void testNextWithEvenStrategyFactory() {
         populateList();
-        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+        var expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
-                .filter(i -> selectStrategyFactory.evenStrategy().apply(i))
-                .mapToObj(i -> i);
+                .filter(i -> selectStrategyFactory.evenStrategy().apply(i));
         testIteratorOnList(expected, () -> list.next(selectStrategyFactory.evenStrategy()));
+    }
+
+    private void testIteratorOnList(IntStream expected, Supplier<Optional<Integer>> listGetter) {
+        testIteratorOnList(expected.mapToObj(i -> i), listGetter);
     }
 
     private void testIteratorOnList(Stream<Integer> expected, Supplier<Optional<Integer>> listGetter) {
