@@ -96,6 +96,15 @@ public class CircularListTest {
     }
 
     @Test
+    void testNextAndPrevious() {
+        populateList();
+        assertEquals(0, list.next().get());
+        assertEquals(1, list.previous().get());
+        assertEquals(0, list.previous().get());
+        assertEquals(2, list.next().get());
+    }
+
+    @Test
     void testReset() {
         populateList();
         assertEquals(LIST_START, list.next().get());
