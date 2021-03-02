@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -51,9 +52,8 @@ public class CircularListTest {
     @Test
     void testNext() {
         populateList();
-        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
-                .mapToObj(i -> i % LIST_END)
-                .collect(Collectors.toList());
+        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+                .mapToObj(i -> i % LIST_END);
         testIteratorOnList(expected, () -> list.next());
     }
 
@@ -76,11 +76,10 @@ public class CircularListTest {
     @Test
     void testPrevious() {
         populateList();
-        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
-                .mapToObj(i -> (-i + LIST_END) % LIST_END)
-                .collect(Collectors.toList());
-        testIteratorOnList(expected,() -> list.previous());
+                .mapToObj(i -> (-i + LIST_END) % LIST_END);
+        testIteratorOnList(expected, () -> list.previous());
     }
 
     @Test
@@ -115,11 +114,10 @@ public class CircularListTest {
     @Test
     void testNextWithStrategy() {
         populateList();
-        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
                 .filter(i -> i % 2 == 0)
-                .mapToObj(i -> i)
-                .collect(Collectors.toList());
+                .mapToObj(i -> i);
         testIteratorOnList(expected, () -> list.next(i -> i % 2 == 0));
     }
 
@@ -132,20 +130,19 @@ public class CircularListTest {
     @Test
     void testNextWithEvenStrategyFactory() {
         populateList();
-        List<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
+        Stream<Integer> expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
                 .filter(i -> selectStrategyFactory.evenStrategy().apply(i))
-                .mapToObj(i -> i)
-                .collect(Collectors.toList());
+                .mapToObj(i -> i);
         testIteratorOnList(expected, () -> list.next(selectStrategyFactory.evenStrategy()));
     }
 
-    private void testIteratorOnList(List<Integer> expected, Supplier<Optional<Integer>> listGetter) {
-        for (int i : expected) {
+    private void testIteratorOnList(Stream<Integer> expected, Supplier<Optional<Integer>> listGetter) {
+        expected.forEach(i -> {
             Optional<Integer> elem = listGetter.get();
             assertTrue(elem.isPresent());
             assertEquals(i, elem.get());
-        }
+        });
     }
 
     private void populateList() {
