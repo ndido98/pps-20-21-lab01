@@ -31,7 +31,7 @@ public class CircularListImpl implements CircularList {
 
     @Override
     public Optional<Integer> next() {
-        return next(i -> true);
+        return next(elem -> true);
     }
 
     @Override
