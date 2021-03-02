@@ -18,7 +18,7 @@ public class CircularListTest {
 
     private static final int REPETITIONS = 2;
     private static final int LIST_START = 0;
-    private static final int LIST_END = 3;
+    private static final int LIST_END = 10;
     private CircularList list;
     private SelectStrategyFactory selectStrategyFactory;
 
@@ -97,7 +97,7 @@ public class CircularListTest {
         assertEquals(0, list.next().get());
         assertEquals(1, list.previous().get());
         assertEquals(0, list.previous().get());
-        assertEquals(2, list.next().get());
+        assertEquals(9, list.next().get());
     }
 
     @Test
@@ -122,6 +122,11 @@ public class CircularListTest {
     @Test
     void testNextWithEvenStrategyFactory() {
         testStrategy(selectStrategyFactory.evenStrategy());
+    }
+
+    @Test
+    void testNextWithMultipleOfStrategyFactory() {
+        testStrategy(selectStrategyFactory.multipleOfStrategy(2));
     }
 
     private void testStrategy(SelectStrategy strategy) {
