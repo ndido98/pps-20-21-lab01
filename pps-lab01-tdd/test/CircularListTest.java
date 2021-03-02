@@ -126,7 +126,12 @@ public class CircularListTest {
 
     @Test
     void testNextWithMultipleOfStrategyFactory() {
-        testStrategy(selectStrategyFactory.multipleOfStrategy(2));
+        testStrategy(selectStrategyFactory.multipleOfStrategy(3));
+    }
+
+    @Test
+    void testNextWithEqualsStrategyFactory() {
+        testStrategy(selectStrategyFactory.equalsStrategy(6));
     }
 
     private void testStrategy(SelectStrategy strategy) {
