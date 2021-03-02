@@ -1,8 +1,5 @@
-import lab01.tdd.CircularList;
-import lab01.tdd.CircularListImpl;
+import lab01.tdd.*;
 
-import lab01.tdd.SelectStrategyFactory;
-import lab01.tdd.SelectStrategyFactoryImpl;
 import org.junit.jupiter.api.*;
 
 import java.util.List;
@@ -113,11 +110,7 @@ public class CircularListTest {
 
     @Test
     void testNextWithStrategy() {
-        populateList();
-        var expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
-                .map(i -> i % LIST_END)
-                .filter(i -> i % 2 == 0);
-        testIteratorOnList(expected, () -> list.next(i -> i % 2 == 0));
+        testStrategy(i -> i % 2 == 0);
     }
 
     @Test
@@ -128,11 +121,15 @@ public class CircularListTest {
 
     @Test
     void testNextWithEvenStrategyFactory() {
+        testStrategy(selectStrategyFactory.evenStrategy());
+    }
+
+    private void testStrategy(SelectStrategy strategy) {
         populateList();
         var expected = IntStream.range(LIST_START, REPETITIONS * LIST_END)
                 .map(i -> i % LIST_END)
-                .filter(i -> selectStrategyFactory.evenStrategy().apply(i));
-        testIteratorOnList(expected, () -> list.next(selectStrategyFactory.evenStrategy()));
+                .filter(i -> strategy.apply(i));
+        testIteratorOnList(expected, () -> list.next(strategy));
     }
 
     private void testIteratorOnList(IntStream expected, Supplier<Optional<Integer>> listGetter) {
